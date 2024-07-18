@@ -46,17 +46,3 @@ document.addEventListener('DOMContentLoaded', function () {
     findButton.addEventListener('click', filterOrganizations);
     browseButton.addEventListener('click', filterOrganizations);
 });
-
-function scrollLeft(rowId) {
-    document.getElementById(rowId).scrollBy({
-        left: -300,
-        behavior: 'smooth'
-    });
-}
-
-function scrollRight(rowId) {
-    document.getElementById(rowId).scrollBy({
-        left: 300,
-        behavior: 'smooth'
-    });
-}
