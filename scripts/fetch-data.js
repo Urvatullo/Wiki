@@ -1,5 +1,5 @@
-const fetch = require('node-fetch');
-const fs = require('fs');
+import fetch from 'node-fetch';
+import { writeFile } from 'fs/promises';
 
 const url = 'https://zakyatbot.ru/getnews';
 
@@ -11,7 +11,7 @@ async function fetchData() {
     }
     const data = await response.json();
     
-    fs.writeFileSync('data/news.json', JSON.stringify(data, null, 2));
+    await writeFile('data/news.json', JSON.stringify(data, null, 2));
     
     console.log('Data successfully fetched and saved to news.json');
   } catch (error) {
