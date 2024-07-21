@@ -37,44 +37,64 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    async function fetchContent(url, targetElement) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
+    function displayNews(data) {
+        newsRow.innerHTML = '';
+        data.forEach(newsItem => {
+            const div = document.createElement('div');
+            div.classList.add('content-item');
 
-            targetElement.innerHTML = '';
+            const title = document.createElement('h4');
+            title.textContent = newsItem.title;
 
-            data.forEach(item => {
-                const div = document.createElement('div');
-                div.classList.add('content-item');
+            const description = document.createElement('p');
+            description.textContent = newsItem.description;
 
-                const title = document.createElement('h4');
-                title.textContent = item.title;
+            const link = document.createElement('a');
+            link.textContent = 'Read more';
+            link.href = newsItem.url;
+            link.target = '_blank';
 
-                const description = document.createElement('p');
-                description.textContent = item.description;
+            div.appendChild(title);
+            div.appendChild(description);
+            div.appendChild(link);
 
-                const link = document.createElement('a');
-                link.textContent = 'Read more';
-                link.href = item.url;
-                link.target = '_blank';
-
-                div.appendChild(title);
-                div.appendChild(description);
-                div.appendChild(link);
-
-                targetElement.appendChild(div);
-            });
-        } catch (error) {
-            console.error('Error fetching content:', error);
-        }
+            newsRow.appendChild(div);
+        });
     }
 
-    fetchContent('data/news.json', newsRow);
-    fetchContent('data/articles.json', articlesRow);
+    function displayArticles(data) {
+        articlesRow.innerHTML = '';
+        data.forEach(article => {
+            const div = document.createElement('div');
+            div.classList.add('content-item');
+
+            const title = document.createElement('h4');
+            title.textContent = article.title;
+
+            const description = document.createElement('p');
+            description.textContent = article.description;
+
+            const link = document.createElement('a');
+            link.textContent = 'Read more';
+            link.href = article.url;
+            link.target = '_blank';
+
+            div.appendChild(title);
+            div.appendChild(description);
+            div.appendChild(link);
+
+            articlesRow.appendChild(div);
+        });
+    }
+    fetch('https://zakyatbot.ru/getnews')
+        .then(response => response.json())
+        .then(data => displayNews(data))
+        .catch(error => console.error('Error fetching news:', error));
+
+    fetch('data/articles.json')
+        .then(response => response.json())
+        .then(data => displayArticles(data))
+        .catch(error => console.error('Error fetching articles:', error));
 
     findButton.addEventListener('click', filterOrganizations);
     browseButton.addEventListener('click', filterOrganizations);
