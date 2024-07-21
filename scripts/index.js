@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    fetch('https://zakyatbot.ru/getnews')
+    fetch('https://cors-anywhere.herokuapp.com/https://zakyatbot.ru/getnews')
         .then(response => response.json())
         .then(data => {
             const newsRow = document.getElementById('newsRow');
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 newsRow.appendChild(div);
             });
         })
-    .catch(error => console.error('Error fetching news:', error));
+        .catch(error => console.error('Error fetching news:', error));
 
     fetch('data/articles.json')
         .then(response => response.json())
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 articlesRow.appendChild(div);
             });
         })
-    .catch(error => console.error('Error fetching articles:', error));
+        .catch(error => console.error('Error fetching articles:', error));
 
     findButton.addEventListener('click', filterOrganizations);
     browseButton.addEventListener('click', filterOrganizations);
