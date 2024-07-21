@@ -38,29 +38,38 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function displayNews(data) {
+        console.log('Displaying news:', data);
         newsRow.innerHTML = '';
         data.forEach(newsItem => {
             const div = document.createElement('div');
             div.classList.add('content-item');
-
+    
             const title = document.createElement('h4');
             title.textContent = newsItem.title;
-
+    
             const description = document.createElement('p');
             description.textContent = newsItem.description;
-
+    
             const link = document.createElement('a');
             link.textContent = 'Read more';
             link.href = newsItem.url;
             link.target = '_blank';
-
+    
             div.appendChild(title);
             div.appendChild(description);
             div.appendChild(link);
-
+    
             newsRow.appendChild(div);
         });
     }
+    
+    fetch('https://zakyatbot.ru/getnews')
+        .then(response => {
+            console.log('Fetch response:', response);
+            return response.json();
+        })
+        .then(data => displayNews(data))
+        .catch(error => console.error('Error fetching news:', error));
 
     function displayArticles(data) {
         articlesRow.innerHTML = '';
@@ -86,10 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
             articlesRow.appendChild(div);
         });
     }
-    fetch('https://zakyatbot.ru/getnews')
-        .then(response => response.json())
-        .then(data => displayNews(data))
-        .catch(error => console.error('Error fetching news:', error));
 
     fetch('data/articles.json')
         .then(response => response.json())
