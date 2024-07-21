@@ -40,11 +40,12 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchContent(url, targetElement) {
         try {
             const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
 
-            // Log the fetched data to verify it's being retrieved correctly
-            console.log('Fetched Data:', data);
+            targetElement.innerHTML = '';
 
             data.forEach(item => {
                 const div = document.createElement('div');
@@ -72,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    fetchContent('https://cors-anywhere.herokuapp.com/https://zakyatbot.ru/getnews', newsRow);
+    fetchContent('data/news.json', newsRow);
     fetchContent('data/articles.json', articlesRow);
 
     findButton.addEventListener('click', filterOrganizations);
