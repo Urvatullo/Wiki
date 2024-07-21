@@ -1,7 +1,9 @@
 import fetch from 'node-fetch';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
+import { dirname } from 'path';
 
 const url = 'https://zakyatbot.ru/getnews';
+const filePath = 'data/news.json';
 
 async function fetchData() {
   try {
@@ -11,7 +13,9 @@ async function fetchData() {
     }
     const data = await response.json();
     
-    await writeFile('data/news.json', JSON.stringify(data, null, 2));
+    await mkdir(dirname(filePath), { recursive: true });
+
+    await writeFile(filePath, JSON.stringify(data, null, 2));
     
     console.log('Data successfully fetched and saved to news.json');
   } catch (error) {
