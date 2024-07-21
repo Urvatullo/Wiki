@@ -4,11 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     infoButtons.forEach(button => {
         button.addEventListener('click', function () {
             const infoText = this.nextElementSibling;
-            if (infoText.style.display === 'block') {
-                infoText.style.display = 'none';
-            } else {
-                infoText.style.display = 'block';
-            }
+            infoText.style.display = infoText.style.display === 'block' ? 'none' : 'block';
         });
     });
 
@@ -37,82 +33,44 @@ document.addEventListener('DOMContentLoaded', function () {
             const categoryMatches = !selectedCategory || category === selectedCategory;
             const countryMatches = !selectedCountry || country === selectedCountry;
 
-            if (nameMatches && categoryMatches && countryMatches) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
+            item.style.display = (nameMatches && categoryMatches && countryMatches) ? '' : 'none';
         });
     }
 
-    function loadNews() {
-        fetch('https://zakyatbot.ru/getnews')
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    data.forEach(newsItem => {
-                        const div = document.createElement('div');
-                        div.classList.add('content-item');
+    async function fetchContent(url, targetElement) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
 
-                        const title = document.createElement('h4');
-                        title.textContent = newsItem.title;
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.classList.add('content-item');
 
-                        const description = document.createElement('p');
-                        description.textContent = newsItem.description;
+                const title = document.createElement('h4');
+                title.textContent = item.title;
 
-                        const link = document.createElement('a');
-                        link.textContent = 'Read more';
-                        link.href = newsItem.url;
-                        link.target = '_blank';
+                const description = document.createElement('p');
+                description.textContent = item.description;
 
-                        div.appendChild(title);
-                        div.appendChild(description);
-                        div.appendChild(link);
+                const link = document.createElement('a');
+                link.textContent = 'Read more';
+                link.href = item.url;
+                link.target = '_blank';
 
-                        newsRow.appendChild(div);
-                    });
-                } else {
-                    console.error('Data format is incorrect');
-                }
-            })
-            .catch(error => console.error('Error fetching news:', error));
+                div.appendChild(title);
+                div.appendChild(description);
+                div.appendChild(link);
+
+                targetElement.appendChild(div);
+            });
+        } catch (error) {
+            console.error('Error fetching content:', error);
+        }
     }
 
-    function loadArticles() {
-        fetch('data/articles.json')
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    data.forEach(article => {
-                        const div = document.createElement('div');
-                        div.classList.add('content-item');
-
-                        const title = document.createElement('h4');
-                        title.textContent = article.title;
-
-                        const description = document.createElement('p');
-                        description.textContent = article.description;
-
-                        const link = document.createElement('a');
-                        link.textContent = 'Read more';
-                        link.href = article.url;
-                        link.target = '_blank';
-
-                        div.appendChild(title);
-                        div.appendChild(description);
-                        div.appendChild(link);
-
-                        articlesRow.appendChild(div);
-                    });
-                } else {
-                    console.error('Data format is incorrect');
-                }
-            })
-            .catch(error => console.error('Error fetching articles:', error));
-    }
-
-    loadNews();
-    loadArticles();
+    fetchContent('https://cors-anywhere.herokuapp.com/https://zakyatbot.ru/getnews', newsRow);
+    fetchContent('data/articles.json', articlesRow);
 
     findButton.addEventListener('click', filterOrganizations);
     browseButton.addEventListener('click', filterOrganizations);
