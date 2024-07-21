@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('https://zakyatbot.ru/getnews')
         .then(response => response.json())
         .then(data => {
+            const newsRow = document.getElementById('newsRow');
             data.forEach(newsItem => {
                 const div = document.createElement('div');
                 div.classList.add('content-item');
