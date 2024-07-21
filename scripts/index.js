@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    fetch('data/news.json')
+    fetch('https://zakyatbot.ru/getnews')
         .then(response => response.json())
         .then(data => {
             data.forEach(newsItem => {
@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 div.appendChild(description);
                 div.appendChild(link);
 
+                const newsRow = document.getElementById('newsRow');
                 newsRow.appendChild(div);
             });
         })
