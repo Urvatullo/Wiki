@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 div.appendChild(description);
                 div.appendChild(link);
 
-                const newsRow = document.getElementById('newsRow');
                 newsRow.appendChild(div);
             });
         })
