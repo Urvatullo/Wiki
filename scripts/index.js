@@ -4,7 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
     infoButtons.forEach(button => {
         button.addEventListener('click', function () {
             const infoText = this.nextElementSibling;
-            infoText.style.display = infoText.style.display === 'block' ? 'none' : 'block';
+            if (infoText.style.display === 'block') {
+                infoText.style.display = 'none';
+            } else {
+                infoText.style.display = 'block';
+            }
         });
     });
 
@@ -33,44 +37,68 @@ document.addEventListener('DOMContentLoaded', function () {
             const categoryMatches = !selectedCategory || category === selectedCategory;
             const countryMatches = !selectedCountry || country === selectedCountry;
 
-            item.style.display = (nameMatches && categoryMatches && countryMatches) ? '' : 'none';
+            if (nameMatches && categoryMatches && countryMatches) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
         });
     }
 
-    async function fetchContent(url, targetElement) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-
-            data.forEach(item => {
+    fetch('https://cors-anywhere.herokuapp.com/https://zakyatbot.ru/getnews')
+        .then(response => response.json())
+        .then(data => {
+            const newsRow = document.getElementById('newsRow');
+            data.forEach(newsItem => {
                 const div = document.createElement('div');
                 div.classList.add('content-item');
 
                 const title = document.createElement('h4');
-                title.textContent = item.title;
+                title.textContent = newsItem.title;
 
                 const description = document.createElement('p');
-                description.textContent = item.description;
+                description.textContent = newsItem.description;
 
                 const link = document.createElement('a');
                 link.textContent = 'Read more';
-                link.href = item.url;
+                link.href = newsItem.url;
                 link.target = '_blank';
 
                 div.appendChild(title);
                 div.appendChild(description);
                 div.appendChild(link);
 
-                targetElement.appendChild(div);
+                newsRow.appendChild(div);
             });
-        } catch (error) {
-            console.error('Error fetching content:', error);
-        }
-    }
+        })
+        .catch(error => console.error('Error fetching news:', error));
 
-    fetchContent('https://cors-anywhere.herokuapp.com/https://zakyatbot.ru/getnews', newsRow);
-    fetchContent('data/articles.json', articlesRow);
+    fetch('data/articles.json')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(article => {
+                const div = document.createElement('div');
+                div.classList.add('content-item');
+
+                const title = document.createElement('h4');
+                title.textContent = article.title;
+
+                const description = document.createElement('p');
+                description.textContent = article.description;
+
+                const link = document.createElement('a');
+                link.textContent = 'Read more';
+                link.href = article.url;
+                link.target = '_blank';
+
+                div.appendChild(title);
+                div.appendChild(description);
+                div.appendChild(link);
+
+                articlesRow.appendChild(div);
+            });
+        })
+        .catch(error => console.error('Error fetching articles:', error));
 
     findButton.addEventListener('click', filterOrganizations);
     browseButton.addEventListener('click', filterOrganizations);
